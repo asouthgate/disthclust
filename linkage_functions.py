@@ -66,11 +66,13 @@ class constants:
 
     BLOCK_SIZE = None
     N_BLOCK = None
-    LAST_BLOCK_SIZE = None
     N_NODE = 0
+
+    DATA_FOLDER = None
+    BLOCK_FOLDER = None
         
     @classmethod
-    def init(cls, n, xlen):
+    def init(cls, n, xlen, data_folder, block_folder):
         cls.N_NODE = n
         cls.N_BLOCK = ceil(sqrt(n))
         cls.BLOCK_SIZE = ceil(n/cls.N_BLOCK)
@@ -86,6 +88,9 @@ class constants:
         cls.DEL_VAL = (1<<nb)-1
         cls.HED_VAL = (1<<nb)-2
         cls.END_VAL = (1<<nb)-3 
+
+        cls.DATA_FOLDER = data_folder
+        cls.BLOCK_FOLDER = block_folder
         
     @classmethod
     def get_data_type(cls,n):
@@ -93,17 +98,6 @@ class constants:
             if n<((1<<i)-3):
                 return i
         raise Exception('input {} is too large (larger than uint64).\n'.format(n))    
-
-    @classmethod
-    def getbshape(cls,bi,bj):
-        if bi == cls.N_BLOCK-1 and bj == cls.N_BLOCK-1:
-            return (cls.LAST_BLOCK_SIZE, cls.LAST_BLOCK_SIZE)
-        elif bi == cls.N_BLOCK-1:
-            return (cls.LAST_BLOCK_SIZE, cls.BLOCK_SIZE)
-        elif bj == cls.N_BLOCK-1:
-            return (cls.BLOCK_SIZE, cls.LAST_BLOCK_SIZE)
-        else:
-            return (cls.BLOCK_SIZE, cls.BLOCK_SIZE)
          
     @classmethod    
     def getbi(cls,i):
