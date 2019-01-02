@@ -1,11 +1,11 @@
 import numpy as np
 from multiprocessing import Process
 from multiprocessing import Pool
-import server3 as s3
-import server3_test_functions as s3tf
+import globalserver as s3
+import globalserver_test_functions as s3tf
 from blockfilemmap import *
 from linkage_functions import *
-from worker3 import *
+from worker import *
 from itertools import product
 
 n, d = map(int, sys.argv[1:3])
@@ -15,9 +15,9 @@ print(n, d, "test_block_files", "test_data")
 
 base_directory = "test_block_files"
 
-constants.init(n,d)
+constants.init(n,d, "test_data", "test_block_files")
 nb, bs = constants.N_BLOCK, constants.BLOCK_SIZE
-true_hedInd, true_hedVal = s3tf.test_sort_rows2(X, "test_block_files")
+true_hedInd, true_hedVal = s3tf.test_sort_rows2(X, "test_data", "test_block_files")
 # Get the block matrices to inspect
 true_bprev = np.zeros((constants.N_BLOCK,constants.N_BLOCK),dtype=object)
 true_bnext = np.zeros((constants.N_BLOCK,constants.N_BLOCK),dtype=object)

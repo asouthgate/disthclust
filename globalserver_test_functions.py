@@ -51,7 +51,7 @@ def test_sort_rows1(X, block_directory, data_folder, n_workers, shutdowns=10):
 
     # Prepare data
     n,d=X.shape
-    constants.init(n,d)
+    constants.init(n,d, data_folder, block_directory)
     init_files(block_directory, constants.N_BLOCK)
     hedInd = np.zeros(n-1,dtype=constants.DATA_TYPE)
     hedVal = np.zeros(n-1,dtype=constants.DATA_TYPE) 
@@ -220,10 +220,10 @@ def test_core1(X, block_directory, data_folder, shutdowns=10):
         return treeNodeArr, hedInd, hedVal
 
 
-def test_sort_rows2(X, block_directory):
+def test_sort_rows2(X, data_folder, block_directory):
     ###############  prepare data  ##########################
     n,d=X.shape
-    constants.init(n,d)
+    constants.init(n,d, data_folder, block_directory)
     init_files(block_directory, constants.N_BLOCK)
 
     
@@ -467,7 +467,7 @@ def test_all1(X, block_directory, data_folder, n_workers, shutdowns=10):
     # Prepare data
     n,d=X.shape
     print(n,d,n_workers)
-    constants.init(n,d)
+    constants.init(n,d, data_folder, block_directory)
     init_files(block_directory, constants.N_BLOCK)
     hedInd = np.zeros(n-1,dtype=constants.DATA_TYPE)
     hedVal = np.zeros(n-1,dtype=constants.DATA_TYPE) 

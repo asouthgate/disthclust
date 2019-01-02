@@ -230,10 +230,12 @@ class Worker():
             with multiprocessing.Pool(processes=self.nCores) as pool:
                 results = pool.starmap(del2ins1, tmpargs)
 
+            ri = 0
             for kk in range(0,constants.BLOCK_SIZE):
                 mk = constants.getmi(bk,kk)
                 if self.nodeFlag[mk]:
-                    self.hedInd[mk], self.hedVal[mk] = results[kk]
+                    self.hedInd[mk], self.hedVal[mk] = results[ri]
+                    ri += 1
 
             update_blocks(self.bprev, self.beditPrev, bk)
             update_blocks(self.bnext, self.beditNext, bk)    
@@ -244,12 +246,27 @@ class Worker():
                                self.nextMat,self.beditPrev,self.beditNext,self.blockFlag,bk)
 
             # Parallelize
+            tmpargs = []
             for kk in range(0,iii):
                 mk = constants.getmi(bk,kk)
                 if self.nodeFlag[mk]:
-                    self.hedInd[mk],self.hedVal[mk]=del2ins1(self.distMat[kk,:], self.prevMat[kk,:],
+#                    self.hedInd[mk],self.hedVal[mk]=del2ins1(self.distMat[kk,:], self.prevMat[kk,:],
+#                                                             self.nextMat[kk,:], self.hedInd[mk], 
+#                                                             kk, ii, jj, self.beditPrev, self.beditNext)
+                    tmpargs.append((self.distMat[kk,:], self.prevMat[kk,:],
                                                              self.nextMat[kk,:], self.hedInd[mk], 
-                                                             kk, ii, jj, self.beditPrev, self.beditNext)
+                                                             kk, ii, jj, self.beditPrev, self.beditNext))
+
+
+            with multiprocessing.Pool(processes=self.nCores) as pool:
+                results = pool.starmap(del2ins1, tmpargs)
+
+            ri = 0
+            for kk in range(0,iii):
+                mk = constants.getmi(bk,kk)
+                if self.nodeFlag[mk]:
+                    self.hedInd[mk], self.hedVal[mk] = results[ri]
+                    ri += 1
 
             # hand iith row
             self.nodeFlag[jj]=False
@@ -260,12 +277,29 @@ class Worker():
                 endRowInd=jjj
             else:
                 endRowInd=constants.BLOCK_SIZE
+
+
+            tmpargs = []
             for kk in range(iii+1,endRowInd):
                 mk = constants.getmi(bk,kk)
                 if self.nodeFlag[mk]:
-                    self.hedInd[mk],self.hedVal[mk] = del_pointers(self.distMat[kk,:], self.prevMat[kk,:],
+#                    self.hedInd[mk],self.hedVal[mk] = del_pointers(self.distMat[kk,:], self.prevMat[kk,:],
+#                                                                   self.nextMat[kk,:], self.hedInd[mk],
+#                                                                   kk, jj, self.beditPrev, self.beditNext)
+                    tmpargs.append((self.distMat[kk,:], self.prevMat[kk,:],
                                                                    self.nextMat[kk,:], self.hedInd[mk],
-                                                                   kk, jj, self.beditPrev, self.beditNext)
+                                                                   kk, jj, self.beditPrev, self.beditNext))
+
+
+            with multiprocessing.Pool(processes=self.nCores) as pool:
+                results = pool.starmap(del_pointers, tmpargs)
+
+            ri = 0
+            for kk in range(iii+1,endRowInd):
+                mk = constants.getmi(bk,kk)
+                if self.nodeFlag[mk]:
+                    self.hedInd[mk], self.hedVal[mk] = results[ri]
+                    ri += 1
 
             update_blocks_rowinsertion(self.bprev, self.beditPrev, bk)
             update_blocks_rowinsertion(self.bnext, self.beditNext, bk)
@@ -280,12 +314,26 @@ class Worker():
             else:
                 endRowInd=constants.BLOCK_SIZE
             # Parallelize
+            tmpargs = []
             for kk in range(0,endRowInd):
                 mk = constants.getmi(bk,kk)
                 if self.nodeFlag[mk]:
-                    self.hedInd[mk],self.hedVal[mk] = del_pointers(self.distMat[kk,:], self.prevMat[kk,:],
+#                    self.hedInd[mk],self.hedVal[mk] = del_pointers(self.distMat[kk,:], self.prevMat[kk,:],
+#                                                                   self.nextMat[kk,:], self.hedInd[mk],
+#                                                                   kk, jj, self.beditPrev, self.beditNext)
+                    tmpargs.append((self.distMat[kk,:], self.prevMat[kk,:],
                                                                    self.nextMat[kk,:], self.hedInd[mk],
-                                                                   kk, jj, self.beditPrev, self.beditNext)
+                                                                   kk, jj, self.beditPrev, self.beditNext))
+
+            with multiprocessing.Pool(processes=self.nCores) as pool:
+                results = pool.starmap(del_pointers, tmpargs)
+
+            ri = 0
+            for kk in range(0,endRowInd):
+                mk = constants.getmi(bk,kk)
+                if self.nodeFlag[mk]:
+                    self.hedInd[mk], self.hedVal[mk] = results[ri]
+                    ri += 1
 
             update_blocks(self.bprev, self.beditPrev, bk)
             update_blocks(self.bnext, self.beditNext, bk)     

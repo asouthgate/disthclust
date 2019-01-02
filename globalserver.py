@@ -55,7 +55,7 @@ class BlockServer():
         # Simple counter
         self.nTask = 0
         
-        print("Waiting for workers to connect")
+        print("Waiting for %d workers to connect" % n_workers)
         # Block until all workers are connected
         while self.workers.get_n_workers() < n_workers:
             pass

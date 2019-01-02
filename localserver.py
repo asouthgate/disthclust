@@ -3,7 +3,7 @@ import numpy as np
 from multiprocessing.managers import BaseManager
 from linkage_functions import *
 from update_map import UpdateMap
-from workerdata import *
+from worker import *
 
 class QueueManager(BaseManager):
     pass
@@ -15,7 +15,7 @@ class LocalServer():
     Handles requests
     Calls requested functions
     """
-    def __init__(self, n, d, block_directory, data_directory, worker_id):
+    def __init__(self, n, d, worker_id):
         # Get worker identity 
         self.worker_id = worker_id
 
@@ -42,7 +42,7 @@ class LocalServer():
         self.workers = gManager.get_workers()
         self.workers.add(self.worker_id)
 
-        self.coreworker = CoreWorker()
+        self.coreworker = Worker()
 
         # Listen
         self.shutdown = False
@@ -81,9 +81,7 @@ class LocalServer():
         print("Listening", self.shutdown)
         while not self.shutdown:
             # Try to update with priority
-            print("listening...")
             up = self.globalUpdateMap.get(self.worker_id)
-            print(up, self.worker_id)
             if up:
                 print("got an update", up)
                 res = self.update(up)
@@ -103,7 +101,6 @@ class LocalServer():
                         self.globalTaskQueue.task_done()
                         self.globalResultQueue.put(x)
                 else:
-                    print("sleeping")
                     time.sleep(.01)
 
 if __name__ == '__main__':
@@ -111,8 +108,7 @@ if __name__ == '__main__':
     block_directory, data_directory = sys.argv[1:3]
     worker_id = sys.argv[5]
 
-    constants.init(n, d, block_directory, data_directory) 
-    worker_data.init()
+    constants.init(n, d, data_directory, block_directory) 
     ls = LocalServer(n, d, worker_id)
 
     print('worker %s exit.' % nodename)

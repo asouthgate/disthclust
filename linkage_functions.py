@@ -11,21 +11,21 @@ def load_X_subset(b):
     return Xsub   
 
 # get the "bi"th row of blocks and write into resMat
-def get_mat_from_blocks(block_directory, blockFlag, bi, resMat):
-    bs = constants.BLOCK_SIZE
-    nb = constants.N_BLOCK
+#def get_mat_from_blocks(block_directory, blockFlag, bi, resMat):
+#    bs = constants.BLOCK_SIZE
+#    nb = constants.N_BLOCK
 
-    for bj in range(bi,nb):
-        if not blockFlag[bj]:
-            continue
-        tmpinds = np.arange(bj*bs,(bj+1)*bs)
-        if blockFlag[bj]:
-            bfd = block_directory+"/{}_d/{}_d.block".format(bi, bj)
-            shape = (constants.BLOCK_SIZE, constants.BLOCK_SIZE)
-            dist_block = BlockFileMap(bfd, constants.DATA_TYPE, shape)
-            dist_block.open()
-            resMat[:,tmpinds] = dist_block.read_all()
-            dist_block.close()
+#    for bj in range(bi,nb):
+#        if not blockFlag[bj]:
+#            continue
+#        tmpinds = np.arange(bj*bs,(bj+1)*bs)
+#        if blockFlag[bj]:
+#            bfd = block_directory+"/{}_d/{}_d.block".format(bi, bj)
+#            shape = (constants.BLOCK_SIZE, constants.BLOCK_SIZE)
+#            dist_block = BlockFileMap(bfd, constants.DATA_TYPE, shape)
+#            dist_block.open()
+#            resMat[:,tmpinds] = dist_block.read_all()
+#            dist_block.close()
 
 def sort_ii(distMatii, prevMatii, nextMatii, nodeFlag, hedIndmi, hedValmi, mi):
     hedIndmi,hedValmi=gen_pointers2(distMatii, nodeFlag, mi, prevMatii, nextMatii)
